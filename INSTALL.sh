@@ -39,9 +39,7 @@ helm install rancher rancher-stable/rancher \
   --set replicas=1
 
 echo "k3s.yaml copied to $HOME/.kube/config"
- 
-sudo ufw allow 443
-sudo ufw allow 6443
+echo "Installation Completeted :) "
 
 #Reference notes:
 # If this is the first time you installed Rancher, get started by running this command and clicking the URL it generates:
