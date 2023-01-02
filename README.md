@@ -32,7 +32,6 @@ This homelab should serve the following purposes.
 ### Installation
 ```
 export RANCHER_VERSION=
-export RANCHER_MOUNT_PATH=/mnt/<rancher-path>
 ./INSTALL.sh
 ```
 
@@ -49,4 +48,9 @@ Refer https://ranchermanager.docs.rancher.com/how-to-guides/new-user-guides/back
 
 
 ### Setup Services using Terraform
+
+```
+terraform init
+terraform apply
+```
 
