@@ -34,6 +34,22 @@ resource "kubernetes_ingress_v1" "default-ingress-service" {
                 }
             }
         }
+        rule {
+            host = "studio.invana.io"
+            http {
+                path {
+                    path = "/"
+                    backend {
+                        service {
+                            name = "invana-studio-svc"
+                            port {
+                                number = 8300
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
  
