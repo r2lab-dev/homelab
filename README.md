@@ -27,7 +27,7 @@ This homelab should serve the following purposes.
 6. CI/CD
 
 
-## Infrastructure(Rancher)
+## Infrastructure(k3s+Rancher)
 
 ### Installation
 ```
