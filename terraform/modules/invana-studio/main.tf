@@ -5,7 +5,7 @@ variable "invana_studio_tag" {
 
 
 
-resource "kubernetes_deployment" "invana-studio" { 
+resource "kubernetes_deployment" "invana_studio" { 
 
   metadata { 
     name      = "invana-studio" 
@@ -42,18 +42,23 @@ resource "kubernetes_deployment" "invana-studio" {
 
  
 
-resource "kubernetes_service" "invana_studio" { 
+resource "kubernetes_service" "invana_studio_svc" { 
+  depends_on = [kubernetes_deployment.invana_studio]
+
   metadata { 
-    name      = "invana-studio" 
+    name      = "invana-studio-svc" 
     namespace = "default"
   } 
-  #session_affinity = "ClientIP"
 
   spec { 
     selector = { 
-      app = kubernetes_deployment.invana-studio.spec.0.template.0.metadata.0.labels.app 
+      app = kubernetes_deployment.invana_studio.spec.0.template.0.metadata.0.labels.app 
     } 
-    type = "ClusterIP" 
+    session_affinity = "ClientIP"
+
+    #type = "ClusterIP" 
+    type = "NodePort"
+
     port { 
       port        = 8300 
       target_port = 8300 

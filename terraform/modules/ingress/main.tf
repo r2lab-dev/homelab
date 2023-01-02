@@ -1,18 +1,31 @@
+ 
+
 resource "kubernetes_ingress_v1" "default-ingress-service" {
+    #wait_for_load_balancer = true
+
     # depends_on = [kubernetes_namespace.your-namespace]
     metadata {
-        name = "default-ingress-service"
+        name = "traefik-ingress"
     }
 
     spec {
+        default_backend {
+            service {
+                name = "hello-world-svc"
+                port {
+                    number = 80
+                }
+            }
+        }
+    
         rule {
-            host = "proxy.r2lab.dev"
+            host = "studio.r2lab.dev"
             http {
                 path {
                     path = "/"
                     backend {
                         service {
-                            name = "invana-studio"
+                            name = "invana-studio-svc"
                             port {
                                 number = 8300
                             }
@@ -21,11 +34,6 @@ resource "kubernetes_ingress_v1" "default-ingress-service" {
                 }
             }
         }
-
-        # (Optional) Add an SSL Certificate
-        # tls {
-        #     secret_name = "ssl-certificate-object"
-        #     hosts = ["your-domain"]
-        # }
     }
 }
+ 
