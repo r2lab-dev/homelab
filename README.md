@@ -31,13 +31,14 @@ This homelab should serve the following purposes.
 
 ### Installation
 ```
+export RANCHER_VERSION=
 export RANCHER_MOUNT_PATH=/mnt/<rancher-path>
 ./INSTALL.sh
 ```
 
 ### Connecting to Infrastructure from command-line
 
-This required [Kubectl](https://kubernetes.io/docs/tasks/tools/). 
+This required [Kubectl](https://kubernetes.io/docs/tasks/tools/).
 To checking if installation successfull
 ```
 echo "Checking Rancher installation if successfull"
@@ -45,3 +46,7 @@ kubectl get pods --all-namespaces
 ```
 
 Refer https://ranchermanager.docs.rancher.com/how-to-guides/new-user-guides/backup-restore-and-disaster-recovery/back-up-docker-installed-rancher for more on backup and restore
+
+
+### Setup Services using Terraform
+

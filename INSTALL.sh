@@ -3,10 +3,10 @@
 #
 #
 
-export RANCHER_VERSION=latest #v2.7
-export CONTAINER_NAME=rancher
+CONTAINER_NAME=rancher
 #[ -z "$PORT_PREFIX" ] && echo "Exiting:: PORT_PREFIX not set, cannot proceed." && return
-[ -z "$RANCHER_MOUNT_PATH" ] && echo "Exiting:: RANCHER_MOUNT_PATH not set, cannot proceed." && return
+[ -z "$RANCHER_VERSION" ] && RANCHER_VERSION=latest
+[ -z "$RANCHER_MOUNT_PATH" ] && echo "Exiting:: RANCHER_MOUNT_PATH not set, cannot proceed." && exit 1
 
 
 # start Rancher with docker container
@@ -30,7 +30,13 @@ echo "k3s.yaml copied to $HOME/.kube/config."
 
 
  
+#sudo ufw default deny incoming
+#sudo ufw default allow outgoing
 
+#sudo ufw app list
+#sudo ufw allow 443
 
+#sudo ufw allow 8001 # allow by port
+k3s kubectl proxy --address='0.0.0.0' --port=8001 --accept-hosts='.*'
 
 
