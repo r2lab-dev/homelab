@@ -53,12 +53,3 @@ sudo ufw allow 6443
 # ```
 # kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{ "\n" }}'#  
 # ```
-
-until docker logs $CONTAINER_NAME  2>&1 | grep -q "Bootstrap Password:";
-do
-  sleep 1
-  echo "Server starting.. Waiting 1 more second..."
-done
-echo "here is the password to login"
-echo `docker logs $CONTAINER_NAME  2>&1 | grep "Bootstrap Password:"`
-echo ''
