@@ -1,31 +1,58 @@
 # This script will install Rancher + K3s
-# https://ranchermanager.docs.rancher.com/pages-for-subheaders/install-upgrade-on-a-kubernetes-cluster
+# https://ranchermanager.docs.rancher.com/getting-started/quick-start-guides/deploy-rancher-manager/helm-cli
+# https://docs.k3s.io/installation/kube-dashboard
 
 
 export CONTAINER_NAME=rancher
-export RANCHER_PORT_PREFIX_DEFAULT=9
-export RANCHER_VERSION_DEFAULT=latest
-#[ -z "$PORT_PREFIX" ] && echo "Exiting:: PORT_PREFIX not set, cannot proceed." && return
+export K3S_VERSION_DEFAULT="v1.24.9+k3s1"
+#export RANCHER_PORT_PREFIX_DEFAULT=9
+export RANCHER_VERSION_DEFAULT="v2.7"
+
+[ -z "$HOST_DNS" ] && echo "Exiting:: HOST_DNS not set, cannot proceed. eg: HOST_DNS=infra.localhost.local" && exit 1
+[ -z "$K3S_VERSION" ] && K3S_VERSION=$K3S_VERSION_DEFAULT
 [ -z "$RANCHER_VERSION" ] && RANCHER_VERSION=$RANCHER_VERSION_DEFAULT
-[ -z "$RANCHER_PORT_PREFIX" ] && RANCHER_PORT_PREFIX=$RANCHER_PORT_PREFIX_DEFAULT
-#[ -z "$RANCHER_MOUNT_PATH" ] && echo "Exiting:: RANCHER_MOUNT_PATH not set, cannot proceed." && exit 1
+
+# install k3s
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=$K3S_VERSION K3S_KUBECONFIG_MODE="644"  sh -s - server --cluster-init
+
+echo "Copying k3s.yaml to $HOME/.kube/config"
+cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+echo "Setting the permissions 644 to $HOME/.kube/config"
+sudo chmod go-r $HOME/.kube/config
+
+# install heml
 
 
-# start Rancher with docker container
-docker run -d --name $CONTAINER_NAME \
-  --restart=unless-stopped \
-  -p ${RANCHER_PORT_PREFIX}80:80 -p ${RANCHER_PORT_PREFIX}443:443 -p 6443:6443 \
-  --privileged \
-  rancher/rancher:$RANCHER_VERSION
+# install Rancher 
+helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
+kubectl create namespace cattle-system
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.1/cert-manager.crds.yaml
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --version v1.7.1
+helm install rancher rancher-stable/rancher \
+  --namespace cattle-system \
+  --set hostname=$HOST_DNS \
+  --set replicas=1
 
-# get the password of the Rancher admin
-echo ''
+echo "k3s.yaml copied to $HOME/.kube/config"
+ 
+sudo ufw allow 443
+sudo ufw allow 6443
 
-# while ! docker logs container | grep -q "[services.d] done.";
-# do
-#     sleep 1
-#     echo "working..."
-# done
+#Reference notes:
+# If this is the first time you installed Rancher, get started by running this command and clicking the URL it generates:
+# ```
+# echo https://infra.localhost.local/dashboard/?setup=$(kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}')
+# ```
+#
+# To get just the bootstrap password on its own, run:
+# ```
+# kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{ "\n" }}'#  
+# ```
 
 until docker logs $CONTAINER_NAME  2>&1 | grep -q "Bootstrap Password:";
 do
@@ -35,24 +62,3 @@ done
 echo "here is the password to login"
 echo `docker logs $CONTAINER_NAME  2>&1 | grep "Bootstrap Password:"`
 echo ''
-
-# copy kube/config to host machines.
-docker cp $CONTAINER_NAME:/etc/rancher/k3s/k3s.yaml $HOME/.kube/config
-# correct the permissions for kube/config
-echo "k3s.yaml copied to $HOME/.kube/config"
-echo "Setting the permissions 644 to $HOME/.kube/config"
-chmod 644  $HOME/.kube/config
-
-
- 
-#sudo ufw default deny incoming
-#sudo ufw default allow outgoing
-
-#sudo ufw app list
-sudo ufw allow ${RANCHER_PORT_PREFIX}443
-sudo ufw allow 6443
-
-#sudo ufw allow 8001 # allow by port
-#kubectl proxy --address='0.0.0.0' --port=8001 --accept-hosts='.*'
-
-

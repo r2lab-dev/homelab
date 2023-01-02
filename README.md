@@ -31,9 +31,18 @@ This homelab should serve the following purposes.
 
 ### Installation
 ```
-export RANCHER_VERSION=
+export HOST_DNS=infra.localhost.local
 ./INSTALL.sh
 ```
+
+Use `kubectl -n cattle-system rollout status deploy/rancher` to verify the installation. 
+Open the following ports. 
+```
+sudo ufw allow 443
+sudo ufw allow 6443
+```
+
+Point `https://127.0.0.1:443` to your DNS entry.
 
 ### Connecting to Infrastructure from command-line
 
@@ -54,3 +63,4 @@ terraform init
 terraform apply
 ```
 
+https://ranchermanager.docs.rancher.com/getting-started/quick-start-guides/deploy-workloads/workload-ingress
