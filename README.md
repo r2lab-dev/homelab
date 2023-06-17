@@ -1,14 +1,40 @@
-# Homelab
+# rrmerugu/homelab
 
-This repository contains code and documentation to setup homelab with [Rancher](https://github.com/rancher/rancher) - a complete container management platform
+This repository contains code and documentation of my homelab - a private compute and storage infrastructure.
 
-## The Purpose
 
-This homelab should serve the following purposes. 
+## install 
 
-1. [Hosting personal-services](#personal-services)
-2. [Hosting demo-services](#demo-services)
-3. [Hosting other-services](#other-services)
+
+1. [Installations](docs/installations.md)
+1. [Setup PI](docs/setup-pi.md)
+2. [Setup Megamind](docs/setup-megamind.md)
+
+## Infrastructure
+
+
+
+
+DNS	Pi-hole + unbound 
+VPN	Wireguard + Netmaker
+Remote SSH Access	Teleport
+Infrastructure Monitoring	Prometheus + Graphana
+Homelab dashboard	
+Reverse Proxy	Traefik
+ CI/CD	Gocd ?
+
+
+1. VPN - Netmaker + Wireguard
+2. Remote SSH Access - Teleport
+3. Monitoring & Alerts - Graphana and prometheus.
+
+1. Could storage - NextCloud 
+2. NAS - 
+1. cloud storage + NAS - for files, photos and videos storage.
+
+
+## 
+
  
 ## Personal Services
 1. Nexcloud
