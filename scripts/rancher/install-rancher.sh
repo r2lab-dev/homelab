@@ -1,4 +1,3 @@
-# helm uninstall rancher --namespace cattle-system
 
 
 export RANCHER_FQDN=rancher.r2lab.local
@@ -29,7 +28,6 @@ helm install rancher rancher-stable/rancher \
   --set hostname=$RANCHER_FQDN
   
 kubectl -n cattle-system rollout status deploy/rancher
-
 echo "Rancher Installation Completeted :) [rancher: rancher-stable and cert-manager: $CERTMANAGER_VERSION ] "
 
 

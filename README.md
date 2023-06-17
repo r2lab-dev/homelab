@@ -3,7 +3,81 @@
 This repository contains code and documentation of my homelab - a private compute and storage infrastructure.
 
 
-## install 
+Key focus is on:
+
+1. Have control over my data.
+2. Avoid being tracked by interenet (let's will try the best options )
+3. Learning setting up and monitoring self-hosted infrastructure  
+
+
+## Install local DNS
+
+
+
+## 1. Install K3s+Rancher
+
+### Setup k3s + Rancher
+
+```
+sudo apt -y update
+
+# install k3s-server
+export K3S_URL=https://k3s.localhost.local:6443
+sh scripts/k3s/install-k3s-server.sh
+
+# install helm
+sh scripts/helm/install-helm.sh
+
+# install rancher 
+sh scripts/rancher/install-rancher.sh
+
+# install ingress 
+sh scripts/ingress/install-ingress.sh
+```
+
+
+
+To uninstall use the command `sh scripts/k3s/uninstall-k3s-server.sh`
+
+### Setup Worker Node
+
+On the machine which you want to setup as worker node
+```
+export K3S_TOKEN=<token-here>
+export K3S_URL=https://ip-address:6443
+sh scripts/install-worker-node.sh
+```
+
+### Setup local and remote DNS 
+
+```
+```
+
+ex: to access a deployment as r2lab.dev and r2lab.local 
+
+### Create Deployment 
+
+```
+```
+
+### Exposing deployment via local and remote DNS (with SSL)
+
+```
+```
+
+## Stop, Scale and start deployments
+
+```
+```
+
+
+
+
+
+
+
+
+
 
 
 1. [Installations](docs/installations.md)
