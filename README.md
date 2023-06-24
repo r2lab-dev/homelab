@@ -55,9 +55,143 @@ sh scripts/install-worker-node.sh
 
 ex: to access a deployment as r2lab.dev and r2lab.local 
 
-### Create Deployment 
+### Deploy Application
+
+
+#### Create Persistent Volume Claim
 
 ```
+tee -a hello-world-pvc.yaml << END
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hello-world-pvc-1
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 2Gi
+END
+
+kubectl apply -f hello-world-pvc.yaml
+
+# kubectl edit pvc/hello-world-vol
+```
+
+```
+tee -a hello-world-pv.yaml << END
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: hello-world-vol-2
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+END
+kubectl apply -f hello-world-pv.yaml
+
+kubectl get pv
+```
+
+
+Access modes can be : ReadWriteOnce, ReadOnlyMany, ReadWriteMany
+
+#### Create Deployment
+```
+tee -a hello-world-deployment.yaml << END
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+        - name: homer-dashboard
+          image:  b4bz/homer
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+END
+
+kubectl apply -f hello-world-deployment.yaml
+kubectl get deployments/hello-world
+kubectl rollout status deployments/hello-world
+# kubectl delete deployments/hello-world
+
+```
+
+
+
+```
+tee -a hello-world-service.yaml << END
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world
+spec:
+  ports:
+    - port: 80
+      targetPort: 8300
+      protocol: TCP
+  selector:
+    app:  hello-world
+END
+
+kubectl apply -f hello-world-service.yaml
+```
+
+```
+tee -a hello-world-ingress.yaml << END
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-world
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+spec:
+  rules:
+  - host: hl.r2lab.dev
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hello-world
+            port:
+              number: 80
+END
+
+kubectl apply -f hello-world-ingress.yaml
+```
+
+
+#### Creating ConfigMap
+
+```
+kubectl create configmap config4 --from-literal=foo_env=bar --from-literal=hello_env=world
+
+or 
+
+kubectl create configmap config5 --from-file=./config/app-config.properties
 ```
 
 ### Exposing deployment via local and remote DNS (with SSL)
@@ -71,14 +205,23 @@ ex: to access a deployment as r2lab.dev and r2lab.local
 ```
 
 
+https://kubernetes.io/docs/tasks/
 
 
+https://www.jeffgeerling.com/blog/2022/quick-hello-world-http-deployment-testing-k3s-and-traefik
+
+https://blog.thenets.org/how-to-create-a-k3s-cluster-with-nginx-ingress-controller/
+
+https://qdnqn.com/how-to-configure-traefik-on-k3s/ 
+
+https://k3s.rocks 
+
+https://itnext.io/learn-how-to-configure-your-kubernetes-apps-using-the-configmap-object-d8f30f99abeb 
 
 
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/
 
-
-
-
+https://uthark.github.io/post/2021-10-06-running-pihole-kubernetes/
 
 1. [Installations](docs/installations.md)
 1. [Setup PI](docs/setup-pi.md)
