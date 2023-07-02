@@ -1,26 +1,15 @@
 # Homelab
 
-This repository contains code and documentation to setup homelab with [Rancher](https://github.com/rancher/rancher) - a complete container management platform
+This repository contains code and documentation of my homelab - a private compute and storage infrastructure with 
+1. Monitoring and Alerting
+2. Continuous Integration & Delivery
+3. Backups
 
 
-This homelab should serve the following purposes. 
+Requirements 
 
-1. [Hosting personal-services](#personal-services)
-2. [Hosting demo-services](#demo-services)
-3. [Hosting other-services](#other-services)
- 
-## Personal Services
-1. Nexcloud
+1. Linux VMs - a debian based Virtual Machine.
+2. Ansible - to convert any linux machine to join Homelab fleet.
+3. Terraform - for setting up for the infrastructure
 
-## Demo Services
-1. Invana Studio
-2. Invana Engine 
-3. JanusGraph
-
-## Other Services 
-1. Boring tunnel(proxy)
-2. Reverse Proxy
-3. 2FA
-4. VPN
-5. Teleport
-
+Check documentation [here](docs/index.md)

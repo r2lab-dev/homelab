@@ -1,0 +1,8 @@
+- name: Deploy SSH Key
+  hosts: all
+  become: true
+  tasks:
+  - name: Copy SSH Key to authorized_keys
+    authorized_key:
+      user: root
+      key: "{{ lookup('file', '/path/to/id_rsa.pub') }}"
