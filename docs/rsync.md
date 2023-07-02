@@ -3,5 +3,5 @@
 
 ```
 sudo apt install rsync
-rsync -av ~/Pictures/Photos/ ravi@megamind:"/media/HARD\ DISK"
+rsync -av -P ~/Pictures/Photos/ ravi@megamind:"/media/HARD\ DISK"
 ```
