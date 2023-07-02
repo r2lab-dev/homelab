@@ -1,66 +1,50 @@
-# Homelab
-
-This repository contains code and documentation to setup homelab with [Rancher](https://github.com/rancher/rancher) - a complete container management platform
-
-## The Purpose
-
-This homelab should serve the following purposes. 
-
-1. [Hosting personal-services](#personal-services)
-2. [Hosting demo-services](#demo-services)
-3. [Hosting other-services](#other-services)
- 
-## Personal Services
-1. Nexcloud
-
-## Demo Services
-1. Invana Studio
-2. Invana Engine 
-3. JanusGraph
-
-## Other Services 
-1. Boring tunnel(proxy)
-2. Reverse Proxy
-3. 2FA
-4. VPN
-5. Teleport
-6. CI/CD
 
 
-## Infrastructure(k3s+Rancher)
 
-### Installation
-```
-export HOST_DNS=infra.localhost.local
-./INSTALL.sh
-```
-
-Use `kubectl -n cattle-system rollout status deploy/rancher` to verify the installation. 
-Open the following ports. 
-```
-sudo ufw allow 443
-sudo ufw allow 6443
-```
-
-Point `https://127.0.0.1:443` to your DNS entry.
-
-### Connecting to Infrastructure from command-line
-
-This required [Kubectl](https://kubernetes.io/docs/tasks/tools/).
-To checking if installation successfull
-```
-echo "Checking Rancher installation if successfull"
-kubectl get pods --all-namespaces
-```
-
-Refer https://ranchermanager.docs.rancher.com/how-to-guides/new-user-guides/backup-restore-and-disaster-recovery/back-up-docker-installed-rancher for more on backup and restore
+## preparing Pi
 
 
-### Setup Services using Terraform
+###  install terraform
 
 ```
-terraform init
-terraform apply
+sudo apt update -y  && sudo apt install gpg -y
+
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+sudo apt update -y
+
+sudo apt install terraform -y
+
 ```
 
-https://ranchermanager.docs.rancher.com/getting-started/quick-start-guides/deploy-workloads/workload-ingress
+Reference: https://www.hashicorp.com/official-packaging-guide?product_intent=terraform
+
+### install docker 
+
+```
+
+sudo apt-get update -y && sudo apt-get install ca-certificates curl gnupg -y
+
+sudo install -m 0755 -d /etc/apt/keyrings
+$ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+ echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update -y
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+```
+
+Reference: https://docs.docker.com/engine/install/debian/
