@@ -1,0 +1,10 @@
+- name: "Update Apt Cache"
+  apt: 
+    update_cache: yes
+
+- name: Wait for APT Lock
+  shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
+
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist

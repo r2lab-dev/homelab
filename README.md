@@ -17,3 +17,8 @@ This repository contains code and documentation of my homelab - a private comput
 3. Terraform - for setting up for the infrastructure
 
 Check [docs](docs/index.md)
+
+
+### References
+
+- https://www.digitalocean.com/community/tutorials/how-to-set-up-ansible-inventories

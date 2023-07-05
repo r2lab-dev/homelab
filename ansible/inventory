@@ -1,0 +1,12 @@
+[pi_nodes]
+antman.local
+
+[homelab_nodes]
+megamind.local
+
+
+[pi_nodes:vars]
+ansible_user=r2-user
+
+[homelab_nodes:vars]
+ansible_user=r2-user

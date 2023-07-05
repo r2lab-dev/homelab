@@ -1,8 +1,11 @@
-- name: Deploy SSH Key
+- name: "machines-setup"
   hosts: all
-  become: false
+  become: true
+
+  vars_files:
+    - default.config.yml
+  
   tasks:
-  - name: Copy SSH Key to authorized_keys
-    authorized_key:
-      user: root
-      key: "{{ lookup('file', '/path/to/id_rsa.pub') }}"
+    - import_tasks: tasks/01-apt-update.yml
+    - import_tasks: tasks/02-install-docker.yml
+    - import_tasks: tasks/03-python-packages.yml

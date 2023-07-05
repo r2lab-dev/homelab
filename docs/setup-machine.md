@@ -3,19 +3,38 @@
 
 ## setup ssh access 
 
+
+
+### Create ssh key 
 ```
-REMOTE_USER=''
-REMOTE_HOST=''
 KEY_NAME='r2-user-key'
 
+# create ssh key
 ssh-keygen -t ed25519 -f ~/.ssh/$KEY_NAME
+
+# add ssh key to your machine 
+ssh-add  ~/.ssh/$KEY_NAME
+
+
+```
+
+
+```
+REMOTE_USER='r2-user'
+REMOTE_HOST=''
+
 ssh-copy-id -i ~/.ssh/$KEY_NAME.pub $REMOTE_USER@$REMOTE_HOST
 ssh $REMOTE_USER@$REMOTE_HOST
 ```
 
 
+
 ## setup raspberry-pi machines 
 
+```
+ansible -i inventory pi_nodes -m ping # make sure ssh access works
+ansible-playbook main.yml -i inventory -t installation,services,pi
+```
 
 
 
