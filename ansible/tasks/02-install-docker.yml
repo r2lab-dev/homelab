@@ -30,16 +30,16 @@
     state: present
 
 # add-apt-repository
-- name: Set up the stable repository for raspbian
+- name: Set up the stable repository[raspbian]
   apt_repository:
-    repo: deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/raspbian  "bullseye" stable
+    repo: deb [arch="arm64" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/raspbian bullseye stable
     state: present
     update_cache: yes
 
 # # add-apt-repository
 # - name: Set up the stable repository for Debian
 #   apt_repository:
-#     repo: deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/raspbian  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable
+#     repo: deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debain  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable
 #     state: present
 #     update_cache: yes
 
